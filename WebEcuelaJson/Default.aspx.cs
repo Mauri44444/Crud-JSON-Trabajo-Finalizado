@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -16,6 +18,12 @@ public partial class _Default : System.Web.UI.Page
 
             case "ADDUSUARIO": AddUsuario(); break;
             case "LISTUSUARIOS": ListUsuarios(); break;
+            case "DELETEUSER": DeleteUser(); break;
+            case "MODIFYUSER": ModifyUser(); break;
+            case "FINDUSUARIO": FindUser(); break;
+            default:
+                Response.Write("Invalid action");
+                break;
         }
     }
 
@@ -36,12 +44,61 @@ public partial class _Default : System.Web.UI.Page
             }
 
         }
-    private void ListUsuarios()
-    {
-        Usuario U = new Usuario();
-        string lista = U.List();
-        Response.Write(lista);
+        private void ListUsuarios()
+        {
+            Usuario U = new Usuario();
+            string lista = U.List();
+            Response.Write(lista);
 
-    }
-} 
+        }
+        private void DeleteUser()
+        {
+            Usuario U = new Usuario();
+            U.ID = int.Parse(Request["ID"]);
+
+            try
+            {
+                U.Erase();
+                Response.Write("OK");
+             }
+            catch (Exception er)
+            {
+                Response.Write(er.Message);
+            }
+
+        }
+        private void ModifyUser()
+        {
+            Usuario U = new Usuario();
+
+            U.ID = int.Parse(Request["ID"]);
+            U.Nombre = Request["Nombre"];
+            try
+            {
+                U.Modify();
+                Response.Write("OK");
+            }
+            catch(Exception er)
+            {
+                Response.Write(er.Message);
+            }
+        }
+        private void FindUser()
+        {
+            Usuario U = new Usuario();
+            U.ID = int.Parse(Request["ID"]);
+            try
+            {
+                string user = U.Find();
+                Response.Write(user);
+            }
+            catch (Exception er)
+            {
+                Response.Write(er.Message);
+            }
+        }
+}
+
+
+
 
